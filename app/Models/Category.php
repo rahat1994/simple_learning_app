@@ -14,4 +14,9 @@ class Category extends Model
         'description',
         'parent'
     ];
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }

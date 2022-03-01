@@ -22,6 +22,16 @@ class CategoryController extends Controller
     {
         //
         $categories = Category::all();
+
+        if(count($categories) < 1 ){
+            return response(
+                [
+                    'status' => 'Empty Array',
+                    'data' => null
+                ],
+                200
+            );
+        }
         // dd($categories);
         return response(
             [
@@ -74,6 +84,16 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+
+        if( is_null($category)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
         return response(
             [
                 'status' => 'Success',
@@ -104,6 +124,15 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category)
     {
 
+        if( is_null($category)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
         try{
 
             $category->name = $request->name;
@@ -141,7 +170,17 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        dd("Hello");
         //
+        if( is_null($category)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
         $category->delete();
 
         return response(

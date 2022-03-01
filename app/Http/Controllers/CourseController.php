@@ -21,12 +21,22 @@ class CourseController extends Controller
     public function index()
     {
         //
-        $categories = Course::all();
+        $courses = Course::all();
+
+        if(count($courses) < 1 ){
+            return response(
+                [
+                    'status' => 'Empty Dataset',
+                    'data' => null
+                ],
+                200
+            );
+        }
         // dd($categories);
         return response(
             [
                 'status' => 'Success',
-                'data' => CourseResource::collection($categories)
+                'data' => CourseResource::collection($courses)
             ],
             200
         );
@@ -58,7 +68,15 @@ class CourseController extends Controller
         //     'course_id' =>$course->id,
         // ]);
 
-
+        if( is_null($course)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
 
         return response(
             [
@@ -78,6 +96,16 @@ class CourseController extends Controller
     public function show(Course $course)
     {
                 //
+
+        if( is_null($course)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
         return response(
             [
                 'status' => 'Success',
@@ -110,6 +138,15 @@ class CourseController extends Controller
     public function update(CourseUpdateRequest $request, Course $course)
     {
         //
+        if( is_null($course)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
 
         try{
             
@@ -152,6 +189,16 @@ class CourseController extends Controller
     {
         //
                 //
+
+        if( is_null($course)){
+            return response(
+                [
+                    'status' => 'Not Found',
+                    'data' => null
+                ],
+                200
+            );
+        }
         $course->delete();
 
         return response(
