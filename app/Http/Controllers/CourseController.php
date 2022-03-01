@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CourseCreationRequest;
+use App\Http\Requests\CourseUpdateRequest;
+use App\Http\Resources\CourseResource;
 use App\Models\Course;
+use App\Models\Pricing;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CourseController extends Controller
 {
@@ -15,6 +21,15 @@ class CourseController extends Controller
     public function index()
     {
         //
+        $categories = Course::all();
+        // dd($categories);
+        return response(
+            [
+                'status' => 'Success',
+                'data' => CourseResource::collection($categories)
+            ],
+            200
+        );
     }
 
     /**
@@ -33,9 +48,25 @@ class CourseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CourseCreationRequest $request)
     {
+        $course = Course::create($request->all());
         //
+        // $pricing = Pricing::create([
+        //     'price'=> $request->price->amount,
+        //     'currency' => $request->price->currency,
+        //     'course_id' =>$course->id,
+        // ]);
+
+
+
+        return response(
+            [
+                'status' => 'Success',
+                'data' =>new CourseResource($course)
+            ],
+            200
+        );
     }
 
     /**
@@ -46,7 +77,14 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+                //
+        return response(
+            [
+                'status' => 'Success',
+                'data' => new CourseResource($course)
+            ],
+            200
+        );
     }
 
     /**
@@ -58,6 +96,8 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         //
+
+
     }
 
     /**
@@ -67,9 +107,39 @@ class CourseController extends Controller
      * @param  \App\Models\Course  $course
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(CourseUpdateRequest $request, Course $course)
     {
         //
+
+        try{
+            
+            $course->name = $request->name;
+            $course->description = $request->description;
+            $course->category_id = (isset($request->category_id)) ? $request->category_id : $course->category_id;
+            $course->is_active = (isset($request->is_active))? $request->is_active : $course->is_active;
+            $course->price = (isset($request->price))? $request->price : $course->price;
+            $course->currency = (isset($request->currency))? $request->currency : $course->currency;
+            $course->save();
+
+           return response(
+                [
+                    'status' => 'Success',
+                    'Message' => 'Succesfully Updated'
+                ],
+                200
+            );
+
+        } catch(Exception $e){
+            Log::error($e->getMessage());
+
+            return response(
+                    [
+                        'status' => 'Error',
+                        'Message' => 'Something went wrong'
+                    ],
+                    500
+                );
+        }
     }
 
     /**
@@ -81,5 +151,15 @@ class CourseController extends Controller
     public function destroy(Course $course)
     {
         //
+                //
+        $course->delete();
+
+        return response(
+            [
+                'status' => 'Success',
+                'Message' => 'SuccesFully deleted'
+            ],
+            500
+        );
     }
 }

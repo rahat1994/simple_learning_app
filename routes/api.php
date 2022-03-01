@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +32,5 @@ Route::post('/new_password', [AuthController::class, 'set_new_password']);
 
 
 Route::resource('/category',CategoryController::class);
+Route::resource('/course',CourseController::class);
 

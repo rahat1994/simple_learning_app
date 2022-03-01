@@ -74,6 +74,13 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+        return response(
+            [
+                'status' => 'Success',
+                'data' => new CategoryResource($category)
+            ],
+            200
+        );
     }
 
     /**
