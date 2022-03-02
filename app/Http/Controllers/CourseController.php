@@ -18,11 +18,13 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $courses = Course::all();
+        $courses = Course::paginate($request->all());
+        // dd($courses);
 
+        // return $courses;
         if(count($courses) < 1 ){
             return response(
                 [
@@ -32,11 +34,12 @@ class CourseController extends Controller
                 200
             );
         }
+        // $courses['data'] = CourseResource::collection($courses['data']);
         // dd($categories);
         return response(
             [
                 'status' => 'Success',
-                'data' => CourseResource::collection($courses)
+                'data' => $courses
             ],
             200
         );
