@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryCreationRequest;
-use App\Http\Requests\CategoryUpdateRequest;
-use App\Http\Resources\CategoryCollection;
-use App\Http\Resources\CategoryResource;
-use App\Models\Category;
+use App\Http\Requests\ModuleCreationRequest;
+use App\Http\Requests\ModuleUpdateRequest;
+use App\Http\Resources\ModuleResource;
+use App\Models\Module;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class CategoryController extends Controller
+class ModuleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         //
-        $categories = Category::all();
+        $categories = Module::all();
         if(count($categories) < 1 ){
             return response(
                 [
@@ -35,7 +34,7 @@ class CategoryController extends Controller
         return response(
             [
                 'status' => 'Success',
-                'data' => CategoryResource::collection($categories)
+                'data' => ModuleResource::collection($categories)
             ],
             200
         );
@@ -46,11 +45,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(CategoryCreationRequest $request)
+    public function create()
     {
         //
-
-        
     }
 
     /**
@@ -59,16 +56,16 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CategoryCreationRequest $request)
+    public function store(ModuleCreationRequest $request)
     {
-        $category = Category::create(
+        $category = Module::create(
             $request->all()
         );
 
         return response(
             [
                 'status' => 'Success',
-                'data' =>new CategoryResource($category)
+                'data' =>new ModuleResource($category)
             ],
             200
         );
@@ -77,18 +74,15 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show(Module $module)
     {
-        //
-
-
         return response(
             [
                 'status' => 'Success',
-                'data' => new CategoryResource($category)
+                'data' => new ModuleResource($module)
             ],
             200
         );
@@ -97,10 +91,10 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit(Module $module)
     {
         //
     }
@@ -109,19 +103,18 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryUpdateRequest $request, Category $category)
+    public function update(ModuleUpdateRequest $request, Module $module)
     {
-
-
+        //
         try{
 
-            $category->name = $request->name;
-            $category->description = $request->description;
-            $category->parent = $request->parent;
-            $category->save();
+            $module->name = $request->name;
+            $module->description = $request->description;
+            $module->parent = $request->parent;
+            $module->save();
 
            return response(
                 [
@@ -142,18 +135,18 @@ class CategoryController extends Controller
                     500
                 );
         }
-        
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Category  $category
+     * @param  \App\Models\Module  $module
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Module $module)
     {
-        $category->delete();
+        //
+        $module->delete();
 
         return response(
             [

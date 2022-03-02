@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Course;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CourseResource extends JsonResource
+class CartResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,10 +16,8 @@ class CourseResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'modules' => ModuleResource::collection($this->modules),
+            'course' => Course::findOrFail($this->course_id),
+            'quantity' => $this->quantity
         ];
     }
 }

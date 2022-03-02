@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Library\RoleHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryUpdateRequest extends FormRequest
+class UnitCreationRequest extends FormRequest
 {
+    use RoleHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,8 +27,10 @@ class CategoryUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|',
-            'description' => 'required|string',
-            'parent' => 'numeric'
+            'transcript' => 'required|string',
+            'is_active' => 'boolean',
+            'module_id' => 'required|numeric|exists:modules,id',
+            'src' => 'required|string'
         ];
     }
 }

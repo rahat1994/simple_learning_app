@@ -6,9 +6,14 @@ use App\Http\Requests\SignInRequest;
 use App\Http\Requests\SignUpRequest;
 use App\Models\User;
 use Exception;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules\Password as RulesPassword;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -16,14 +21,15 @@ class AuthController extends Controller
 
     public function sign_in(SignInRequest $request){
         $form_data = $request->all();
+        
         if (!Auth::attempt($form_data)) {
             return $this->error('Credentials not match', 401);
         }
-
+        // dd();
         return response(
             [
                 'status' => "success",
-                'token' => auth()->user()->createToken('API Token')->plainTextToken    
+                'token' => auth()->user()->createToken('API Token', [auth()->user()->role])->plainTextToken    
             ],
             200
         );
@@ -60,39 +66,57 @@ class AuthController extends Controller
         
     }
 
-    public function sendPasswordResetToken(Request $request){
-        $request->validate(
-            [
-                "email" =>"required|email|exists:users,email"
-            ]
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
         );
 
-        $request->email;
-
-        $user = User::where('email', $request->email)->first();
-        try{
-            $reset_link_sent = $user->sendPasswordResetLink();
-            if($reset_link_sent){
-                return response(
-                    [
-                        'status' => "success",
-                        'token' => "A password reset token has been sent to your email"  
-                    ],
-                    200
-                );
-            }
-
-        } catch(Exception $e){
-
-            Log::error($e->getMessage());
-            return response(
-                [
-                    'status' => "Error",
-                    'message' => 'Something went wrong. Try Again later.'
-                ],
-                500
-            );
+        if ($status == Password::RESET_LINK_SENT) {
+            return [
+                'status' => __($status)
+            ];
         }
 
+        // throw ValidationException::withMessages([
+        //     'email' => [trans($status)],
+        // ]);
+    }
+
+    public function reset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => ['required', 'confirmed', RulesPassword::defaults()],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user) use ($request) {
+                $user->forceFill([
+                    'password' => Hash::make($request->password),
+                    'remember_token' => Str::random(60),
+                ])->save();
+
+                $user->tokens()->delete();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status == Password::PASSWORD_RESET) {
+            return response([
+                'message' => 'Password reset successfully'
+            ]);
+        }
+
+        return response([
+            'message' => __($status)
+        ], 500);
     }
 }

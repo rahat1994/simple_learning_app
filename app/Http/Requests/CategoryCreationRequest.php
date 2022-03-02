@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Library\RoleHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryCreationRequest extends FormRequest
 {
+    use RoleHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +15,7 @@ class CategoryCreationRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->isSuperAdmin($this->user()) || $this->isAdmin($this->user());
     }
 
     /**

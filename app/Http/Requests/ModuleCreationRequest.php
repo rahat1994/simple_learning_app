@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Library\RoleHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryUpdateRequest extends FormRequest
+class ModuleCreationRequest extends FormRequest
 {
+    use RoleHelpers;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,7 +28,8 @@ class CategoryUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|',
             'description' => 'required|string',
-            'parent' => 'numeric'
+            'is_active' => 'boolean',
+            'course_id' => 'required|numeric|exists:courses,id'
         ];
     }
 }

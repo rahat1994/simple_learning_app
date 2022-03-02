@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Module extends Model
 {
     use HasFactory;
 
@@ -13,13 +13,10 @@ class Course extends Model
         'name',
         'description',
         'is_active',
-        'category_id',
-        'price',
-        'currency',
+        'course_id'
     ];
 
-    public function modules()
-    {
-        return $this->hasMany(Module::class);
+    public function units(){
+        return $this->hasMany(Unit::class);
     }
 }

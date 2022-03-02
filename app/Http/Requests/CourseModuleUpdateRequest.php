@@ -13,7 +13,7 @@ class CourseModuleUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->isSuperAdmin($this->user()) || $this->isAdmin($this->user());
     }
 
     /**
