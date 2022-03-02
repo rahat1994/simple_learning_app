@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Http\Library\RoleHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RoleAssigningRequest extends FormRequest
+class CourseDeletionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class RoleAssigningRequest extends FormRequest
     use RoleHelpers;
     public function authorize()
     {
-        return $this->isSuperAdmin($this->user());
+        return $this->isSuperAdmin($this->user()) || $this->isAdmin($this->user());
     }
 
     /**
@@ -26,8 +26,7 @@ class RoleAssigningRequest extends FormRequest
     public function rules()
     {
         return [
-            'role' => 'required|string',
-            'user_id' => 'required|numeric|exists:users,id',
+            //
         ];
     }
 }

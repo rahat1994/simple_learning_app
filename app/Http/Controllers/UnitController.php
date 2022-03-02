@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UnitCreationRequest;
+use App\Http\Requests\UnitDeletionRequest;
 use App\Http\Requests\UnitUpdateRequest;
 use App\Http\Resources\UnitsResource;
 use App\Models\Unit;
@@ -114,8 +115,9 @@ class UnitController extends Controller
         try{
 
             $unit->name = $request->name;
-            $unit->description = $request->description;
-            $unit->parent = $request->parent;
+            $unit->transcript = $request->transcript;
+            $unit->module_id = $request->module_id;
+            $unit->src = $request->src;
             $unit->save();
 
            return response(
@@ -128,7 +130,6 @@ class UnitController extends Controller
 
         } catch(Exception $e){
             Log::error($e->getMessage());
-
             return response(
                     [
                         'status' => 'Error',
@@ -145,7 +146,7 @@ class UnitController extends Controller
      * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Unit $unit)
+    public function destroy(UnitDeletionRequest $request, Unit $unit)
     {
         //
         $unit->delete();

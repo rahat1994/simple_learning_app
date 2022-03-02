@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     use HasFactory;
-
+    protected $perPage = 15;
     protected $fillable = [
         'name',
         'description',

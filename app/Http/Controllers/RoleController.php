@@ -169,9 +169,9 @@ class RoleController extends Controller
             return response(
                 [
                     'status' => 'Success',
-                    'Message' => 'SuccesFully Added User Role'
+                    'Message' => 'SuccesFully Assigned Role'
                 ],
-                500
+                200
             );
         } catch (\Throwable $th) {
             //throw $th;

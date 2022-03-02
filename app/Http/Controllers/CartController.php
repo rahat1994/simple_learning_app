@@ -36,13 +36,16 @@ class CartController extends Controller
 
     public function updateCart(Request $request)
     {
-        $cart = Cart::where('course_id', $request->course_id);
-
+        $cart = Cart::where([
+            ['course_id','=', $request->course_id],
+            ['user_id','=', $request->user()->id]
+        ])->get()->first();
+        // dd($cart);
         $cart->quantity = $request->quantity;
         $cart->save();
-
+        $cartItems = Cart::where('user_id', $request->user()->id)->get();
         return $this->onSuccess(
-            [],
+            $cartItems,
             "cart Updated"
         );
 

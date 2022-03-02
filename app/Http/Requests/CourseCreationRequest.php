@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Library\RoleHelpers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CourseCreationRequest extends FormRequest
@@ -11,6 +12,7 @@ class CourseCreationRequest extends FormRequest
      *
      * @return bool
      */
+    use RoleHelpers;
     public function authorize()
     {
         return $this->isSuperAdmin($this->user()) || $this->isAdmin($this->user());

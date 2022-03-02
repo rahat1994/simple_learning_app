@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Library\RoleHelpers;
 use App\Http\Requests\CategoryCreationRequest;
+use App\Http\Requests\CategoryDeletionRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    use RoleHelpers;
     /**
      * Display a listing of the resource.
      *
@@ -151,10 +154,8 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(CategoryDeletionRequest $request, Category $category)
     {
-        $category->delete();
-
         return response(
             [
                 'status' => 'Success',

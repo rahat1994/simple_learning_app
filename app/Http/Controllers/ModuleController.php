@@ -113,7 +113,7 @@ class ModuleController extends Controller
 
             $module->name = $request->name;
             $module->description = $request->description;
-            $module->parent = $request->parent;
+            $module->course_id = $request->course_id;
             $module->save();
 
            return response(
